@@ -1,0 +1,23 @@
+# IntelliJ
+*.iml
+
+# Gradle files
+.gradle
+/build
+
+# Default Android Project Template
+/local.properties
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# The whole .idea folder is ignored except the project specific code style and the defined runconfigurations
+.idea/**
+!.idea/codeStyles/
+!.idea/codeStyles/Project.xml
+!.idea/codeStyles/codeStyleConfig.xml
+!.idea/runConfigurations.xml
+
+# macOS
+.DS_Store

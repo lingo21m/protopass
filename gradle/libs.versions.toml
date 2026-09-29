@@ -1,0 +1,7 @@
+[versions]
+gradlePluginPublish = "2.1.1"
+
+[libraries]
+
+[plugins]
+gradle-plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "gradlePluginPublish" }
