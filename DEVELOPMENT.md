@@ -10,15 +10,39 @@ This guide is intended for developers working on the ProtoPass Gradle plugin its
 
 ## Local Development & Testing
 
+The quickest way to try out changes in a real project is to build the plugin yourself, publish it to your local Maven repository (`~/.m2/repository`) and point the consumer project at `mavenLocal()`. Nothing is uploaded anywhere.
+
+### Prerequisites
+
+- **JDK 17**: The build uses a Java 17 toolchain. Gradle will pick up an installed JDK 17 automatically.
+- No global Gradle installation is needed; use the included wrapper (`./gradlew`).
+
+### Building the Plugin
+
+Compile the plugin and run the test suite:
+
+```bash
+./gradlew build
+```
+
+The plugin JAR is written to `build/libs/`.
+
 ### Publishing to Local Maven
 
-To test the plugin in a local project without publishing it remotely, you can publish it to your local Maven repository (`~/.m2/repository`).
-
-Run the following command:
+Publish the plugin to your local Maven repository:
 
 ```bash
 ./gradlew publishToMavenLocal
 ```
+
+This installs two artifacts, both using the `version` from `build.gradle.kts`:
+
+| Artifact | Location in `~/.m2/repository` |
+| --- | --- |
+| Plugin implementation (`ch.tikkosoft:protopass`) | `ch/tikkosoft/protopass/<version>/` |
+| Plugin marker (`ch.tikkosoft.protopass.gradle.plugin`) | `ch/tikkosoft/protopass/ch.tikkosoft.protopass.gradle.plugin/<version>/` |
+
+Gradle uses the plugin marker to resolve `id("ch.tikkosoft.protopass")` to the implementation artifact, so both must be present.
 
 ### Consuming the Local Plugin
 
@@ -42,6 +66,15 @@ plugins {
     id("ch.tikkosoft.protopass") version "1.0.0" // Use the version from build.gradle.kts
 }
 ```
+
+Keep `mavenLocal()` first so the locally built plugin takes precedence over a published version with the same number. Remove it again once you are done testing.
+
+### Iterating on Changes
+
+After changing the plugin, run `./gradlew publishToMavenLocal` again and rebuild the consumer project. Gradle caches resolved plugins, so if the consumer does not pick up your changes:
+
+- Use a `-SNAPSHOT` version (e.g., `1.0.1-SNAPSHOT`) in both projects while developing, or
+- Run the consumer build with `--refresh-dependencies`.
 
 ## Publishing to Gradle Plugin Portal
 
